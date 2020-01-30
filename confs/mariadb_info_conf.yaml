@@ -1,0 +1,22 @@
+# prod stage
+prod:
+  adapter: mysql+pymysql
+  database: docsity_com
+  port: 3306
+  username: $$your mysql username$$
+  password: $$your mysql password
+  host: $$mysql host$$
+  ssh_host: $$mysql ssh host$$
+  ssh_username: $$mysql ssh username$$
+  ssh_host_key: $$absolute path to .pem file$$
+# staging stage
+staging:
+  adapter: mysql+pymysql
+  database: docsity_com
+  port: 3306
+  username: $$your mysql username$$
+  password: $$your mysql password
+  host: $$mysql host$$
+  ssh_host: $$mysql ssh host$$
+  ssh_username: $$mysql ssh username$$
+  ssh_host_key: $$absolute path to .pem file$$
