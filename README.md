@@ -1,11 +1,11 @@
-# py-accengage
+# py-sqlalchemy-ssh-connector
 
 
 ## About
 
-This library enables you to connect to Accengage REST API.
+Python library to connect to SQLAlchemy with SSH Tunnel.
 
 
 ## Install
 
-To install `pip install git+https://github.com/pualien/py-accengage.git`# py-sqlalchemy-ssh-connector
+To install `pip install git+https://github.com/pualien/py-sqlalchemy-ssh-connector.git`
