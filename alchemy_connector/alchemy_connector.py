@@ -56,7 +56,7 @@ class AlchemyConnector:
         :return: SQLAlchemy connection
         """
         if self.connection is None and self.use_ssh:
-            self.db_url = "{adapter}://{username}:{password}@{local_bind_host}:{local_bind_port}/{database}".format(**self.data_map, local_bind_host=self.server.local_bind_host, local_bind_port=self.server.local_bind_port)
+            self.db_url = "{adapter}://{username}:{password}@localhost:{local_bind_port}/{database}".format(**self.data_map, local_bind_host=self.server.local_bind_host, local_bind_port=self.server.local_bind_port)
         else:
             self.db_url = "{adapter}://{username}:{password}@{host}:{port}/{database}".format(**self.data_map)
 
