@@ -1,7 +1,7 @@
 # prod stage
 prod:
   adapter: mysql+pymysql
-  database: docsity_com
+  database: $$your db name$$
   port: 3306
   username: $$your mysql username$$
   password: $$your mysql password
