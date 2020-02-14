@@ -97,6 +97,9 @@ class AlchemyConnector:
             self.init_ssh()
             with self.server:
                 df = pd.read_sql_query(query, self.connect())
+        else:
+            df = pd.read_sql_query(query, self.connect())
+            self.disconnect()
         return df
 
 
