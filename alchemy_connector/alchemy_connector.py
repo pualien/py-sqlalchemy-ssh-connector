@@ -84,6 +84,8 @@ class AlchemyConnector:
             self.init_ssh()
             with self.server:
                 result_proxy = self.connect().execute(query)
+        else:
+            result_proxy = self.connect().execute(query)
         result = [{column: value for column, value in rowproxy.items()} for rowproxy in result_proxy]
         return result
 
