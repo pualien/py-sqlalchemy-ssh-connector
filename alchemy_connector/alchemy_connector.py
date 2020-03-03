@@ -1,6 +1,7 @@
 import paramiko
 import yaml
 import pandas as pd
+from sqlalchemy.pool import NullPool
 
 from sshtunnel import SSHTunnelForwarder
 from sqlalchemy import create_engine
@@ -32,6 +33,7 @@ class AlchemyConnector:
             self.connection = None
             self.db_url = None
             self.server = None
+            self.engine = None
             self.use_ssh = use_ssh
             self.keep_open = keep_open
 
@@ -60,7 +62,9 @@ class AlchemyConnector:
         else:
             self.db_url = "{adapter}://{username}:{password}@{host}:{port}/{database}".format(**self.data_map)
 
-        self.connection = create_engine(self.db_url).connect()
+        self.engine = create_engine(self.db_url, poolclass=NullPool)
+
+        self.connection = self.engine.connect()
         return self.connection
 
     def disconnect(self):
@@ -86,6 +90,7 @@ class AlchemyConnector:
                 result_proxy = self.connect().execute(query)
         else:
             result_proxy = self.connect().execute(query)
+            self.disconnect()
         result = [{column: value for column, value in rowproxy.items()} for rowproxy in result_proxy]
         return result
 
