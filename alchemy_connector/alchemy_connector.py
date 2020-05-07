@@ -25,17 +25,20 @@ class ConnectDisconnectSSHTunnelForwarder(SSHTunnelForwarder):
 
 
 class AlchemyConnector:
-    def __init__(self, stage_environment, yaml_path, use_ssh=True, keep_open=False):
+    def __init__(self, stage_environment, yaml_path, use_ssh=True, keep_open=False, yaml_keyfile_string=None):
         # open yaml file
-        with open(yaml_path) as f:
-            # load yaml file based on stage environment
-            self.data_map = yaml.safe_load(f)[stage_environment]
-            self.connection = None
-            self.db_url = None
-            self.server = None
-            self.engine = None
-            self.use_ssh = use_ssh
-            self.keep_open = keep_open
+        if yaml_keyfile_string is None:
+            with open(yaml_path) as f:
+                # load yaml file based on stage environment
+                self.data_map = yaml.safe_load(f)[stage_environment]
+        else:
+            self.data_map = yaml.safe_load(yaml_keyfile_string)[stage_environment]
+        self.connection = None
+        self.db_url = None
+        self.server = None
+        self.engine = None
+        self.use_ssh = use_ssh
+        self.keep_open = keep_open
 
     def init_ssh(self):
         """
