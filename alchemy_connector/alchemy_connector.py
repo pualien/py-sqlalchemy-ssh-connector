@@ -91,6 +91,7 @@ class AlchemyConnector:
             self.init_ssh()
             with self.server:
                 result_proxy = self.connect().execute(query)
+                self.disconnect()
         else:
             result_proxy = self.connect().execute(query)
             self.disconnect()
@@ -107,6 +108,7 @@ class AlchemyConnector:
             self.init_ssh()
             with self.server:
                 df = pd.read_sql_query(query, self.connect())
+                self.disconnect()
         else:
             df = pd.read_sql_query(query, self.connect())
             self.disconnect()
