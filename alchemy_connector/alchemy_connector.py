@@ -1,7 +1,9 @@
 import paramiko
+import pymysql
 import yaml
 import pandas as pd
 from sqlalchemy.pool import NullPool
+from retry import retry
 
 from sshtunnel import SSHTunnelForwarder
 from sqlalchemy import create_engine
@@ -25,7 +27,7 @@ class ConnectDisconnectSSHTunnelForwarder(SSHTunnelForwarder):
 
 
 class AlchemyConnector:
-    def __init__(self, stage_environment, yaml_path, use_ssh=True, keep_open=False, yaml_keyfile_string=None):
+    def __init__(self, stage_environment, yaml_path, use_ssh=True, keep_open=False, yaml_keyfile_string=None, skip_tunnel_checkup=False):
         # open yaml file
         if yaml_keyfile_string is None:
             with open(yaml_path) as f:
@@ -38,6 +40,7 @@ class AlchemyConnector:
         self.server = None
         self.engine = None
         self.use_ssh = use_ssh
+        self.skip_tunnel_checkup = skip_tunnel_checkup
         self.keep_open = keep_open
 
     def init_ssh(self):
@@ -52,11 +55,13 @@ class AlchemyConnector:
                                                           ssh_pkey=mypkey,
                                                           remote_bind_address=(
                                                           self.data_map["host"], self.data_map["port"]),
-                                                          skip_tunnel_checkup=False
+                                                          local_bind_address=('127.0.0.1', 10000),
+                                                          skip_tunnel_checkup=self.skip_tunnel_checkup
                                                           )
         self.server.daemon_forward_servers = True
         return self.server
 
+    # @retry((pymysql.err.OperationalError), tries=3, delay=2)
     def connect(self):
         """
         opens SQLAlchemy connection
