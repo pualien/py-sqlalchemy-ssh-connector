@@ -19,7 +19,7 @@ class ConnectDisconnectSSHTunnelForwarder(SSHTunnelForwarder):
     def __enter__(self):
         # enters SSHTunnelForwarder context manager
         super().__enter__()
-        sleep(0.1)
+        sleep(0.5)
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
@@ -99,9 +99,9 @@ class AlchemyConnector:
         if self.connection:
             if not self.connection.closed:
                 self.connection.close()
-            if self.use_ssh:
-                self.server.stop()
             self.connection = None
+        if self.use_ssh:
+            self.server.stop()
         self.server = None
 
     def execute(self, query):
