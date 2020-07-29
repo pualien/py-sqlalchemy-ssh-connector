@@ -47,11 +47,13 @@ class AlchemyConnector:
         """
         mypkey = paramiko.RSAKey.from_private_key_file(self.data_map["ssh_host_key"])
         self.server = ConnectDisconnectSSHTunnelForwarder(self,
-            (self.data_map["ssh_host"], 22),
-            ssh_username=self.data_map["ssh_username"],
-            ssh_pkey=mypkey,
-            remote_bind_address=(self.data_map["host"], self.data_map["port"])
-        )
+                                                          (self.data_map["ssh_host"], 22),
+                                                          ssh_username=self.data_map["ssh_username"],
+                                                          ssh_pkey=mypkey,
+                                                          remote_bind_address=(
+                                                          self.data_map["host"], self.data_map["port"]),
+                                                          skip_tunnel_checkup=False
+                                                          )
         self.server.daemon_forward_servers = True
         return self.server
 
@@ -61,7 +63,9 @@ class AlchemyConnector:
         :return: SQLAlchemy connection
         """
         if self.connection is None and self.use_ssh:
-            self.db_url = "{adapter}://{username}:{password}@localhost:{local_bind_port}/{database}".format(**self.data_map, local_bind_host=self.server.local_bind_host, local_bind_port=self.server.local_bind_port)
+            self.db_url = "{adapter}://{username}:{password}@localhost:{local_bind_port}/{database}".format(
+                **self.data_map, local_bind_host=self.server.local_bind_host,
+                local_bind_port=self.server.local_bind_port)
         else:
             self.db_url = "{adapter}://{username}:{password}@{host}:{port}/{database}".format(**self.data_map)
 
@@ -113,5 +117,3 @@ class AlchemyConnector:
             df = pd.read_sql_query(query, self.connect())
             self.disconnect()
         return df
-
-
