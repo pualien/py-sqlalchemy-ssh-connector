@@ -100,7 +100,7 @@ class AlchemyConnector:
             if not self.connection.closed:
                 self.connection.close()
             self.connection = None
-        if self.use_ssh:
+        if self.use_ssh and self.server is not None:
             self.server.stop()
         self.server = None
 
@@ -135,6 +135,8 @@ class AlchemyConnector:
             with self.server:
                 df = pd.read_sql_query(query, self.connect())
                 self.disconnect()
+                if self.use_ssh and self.server is not None:
+                    self.server.stop()
         else:
             df = pd.read_sql_query(query, self.connect())
             self.disconnect()
