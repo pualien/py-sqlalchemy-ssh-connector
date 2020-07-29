@@ -55,8 +55,7 @@ class AlchemyConnector:
                                                           ssh_pkey=mypkey,
                                                           remote_bind_address=(
                                                           self.data_map["host"], self.data_map["port"]),
-                                                          local_bind_address=('127.0.0.1', 10000),
-                                                          skip_tunnel_checkup=self.skip_tunnel_checkup
+                                                          local_bind_address=('127.0.0.1', 10000)
                                                           )
         self.server.daemon_forward_servers = True
         return self.server
