@@ -1,3 +1,5 @@
+from time import sleep
+
 import paramiko
 import pymysql
 import yaml
@@ -17,6 +19,7 @@ class ConnectDisconnectSSHTunnelForwarder(SSHTunnelForwarder):
     def __enter__(self):
         # enters SSHTunnelForwarder context manager
         super().__enter__()
+        sleep(0.1)
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
@@ -27,7 +30,8 @@ class ConnectDisconnectSSHTunnelForwarder(SSHTunnelForwarder):
 
 
 class AlchemyConnector:
-    def __init__(self, stage_environment, yaml_path, use_ssh=True, keep_open=False, yaml_keyfile_string=None, local_bind_address_port=10000):
+    def __init__(self, stage_environment, yaml_path, use_ssh=True, keep_open=False, yaml_keyfile_string=None,
+                 local_bind_address_port=None):
         # open yaml file
         if yaml_keyfile_string is None:
             with open(yaml_path) as f:
@@ -49,18 +53,27 @@ class AlchemyConnector:
         :return: ConnectDisconnectSSHTunnelForwarder context manager
         """
         mypkey = paramiko.RSAKey.from_private_key_file(self.data_map["ssh_host_key"])
-        self.server = ConnectDisconnectSSHTunnelForwarder(self,
-                                                          (self.data_map["ssh_host"], 22),
-                                                          ssh_username=self.data_map["ssh_username"],
-                                                          ssh_pkey=mypkey,
-                                                          remote_bind_address=(
-                                                          self.data_map["host"], self.data_map["port"]),
-                                                          local_bind_address=('127.0.0.1', self.local_bind_address_port)
-                                                          )
+        if self.local_bind_address_port is not None:
+            self.server = ConnectDisconnectSSHTunnelForwarder(self,
+                                                              (self.data_map["ssh_host"], 22),
+                                                              ssh_username=self.data_map["ssh_username"],
+                                                              ssh_pkey=mypkey,
+                                                              remote_bind_address=(
+                                                              self.data_map["host"], self.data_map["port"]),
+                                                              local_bind_address=('127.0.0.1', self.local_bind_address_port)
+                                                              )
+        else:
+            self.server = ConnectDisconnectSSHTunnelForwarder(self,
+                                                              (self.data_map["ssh_host"], 22),
+                                                              ssh_username=self.data_map["ssh_username"],
+                                                              ssh_pkey=mypkey,
+                                                              remote_bind_address=(
+                                                                  self.data_map["host"], self.data_map["port"])
+                                                              )
         self.server.daemon_forward_servers = True
         return self.server
 
-    # @retry((pymysql.err.OperationalError), tries=3, delay=2)
+    @retry((pymysql.err.OperationalError), tries=3, delay=2)
     def connect(self):
         """
         opens SQLAlchemy connection
@@ -86,6 +99,8 @@ class AlchemyConnector:
         if self.connection:
             if not self.connection.closed:
                 self.connection.close()
+            if self.use_ssh:
+                self.server.stop()
             self.connection = None
         self.server = None
 
@@ -114,6 +129,9 @@ class AlchemyConnector:
         """
         if self.use_ssh:
             self.init_ssh()
+            # self.server.start()
+            # df = pd.read_sql_query(query, self.connect())
+            # self.server.stop()
             with self.server:
                 df = pd.read_sql_query(query, self.connect())
                 self.disconnect()
