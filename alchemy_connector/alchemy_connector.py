@@ -19,7 +19,7 @@ class ConnectDisconnectSSHTunnelForwarder(SSHTunnelForwarder):
     def __enter__(self):
         # enters SSHTunnelForwarder context manager
         super().__enter__()
-        sleep(1)
+        # sleep(1)
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
@@ -129,9 +129,6 @@ class AlchemyConnector:
         """
         if self.use_ssh:
             self.init_ssh()
-            # self.server.start()
-            # df = pd.read_sql_query(query, self.connect())
-            # self.server.stop()
             with self.server:
                 df = pd.read_sql_query(query, self.connect())
                 self.disconnect()
