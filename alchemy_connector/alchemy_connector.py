@@ -19,7 +19,7 @@ class ConnectDisconnectSSHTunnelForwarder(SSHTunnelForwarder):
     def __enter__(self):
         # enters SSHTunnelForwarder context manager
         super().__enter__()
-        # sleep(1)
+        sleep(1)
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
