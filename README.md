@@ -11,10 +11,10 @@ Python library to connect to SQLAlchemy with SSH Tunnel.
 ## Where to get it
 
 The source code is currently hosted on GitHub at:
-<https://github.com/pualien/pymongo-ssh>
+<https://github.com/pualien/py-sqlalchemy-ssh-connector>
 
 Binary installers for the latest released version are available at the
-[Python package index](https://pypi.org/project/pymongo-ssh/)
+[Python package index](https://pypi.org/project/sqlalchemy-connector/)
 
 ```sh
 pip install sqlalchemy-connector
