@@ -27,7 +27,7 @@ def reqs(*f):
 
 
 setup(name='sqlalchemy-connector',
-      version='0.1.20b',
+      version='0.1.21b',
       url='https://github.com/pualien/py-sqlalchemy-ssh-connector',
       license='MIT',
       author='Matteo Senardi',
@@ -36,4 +36,16 @@ setup(name='sqlalchemy-connector',
       packages=find_packages(exclude=['tests']),
       install_requires=reqs('default.txt'),
       long_description=open('README.md').read(),
-      zip_safe=False)
+      zip_safe=False,
+      long_description_content_type='text/markdown',
+      python_requires='~=3.6',
+      classifiers=[
+          "License :: OSI Approved :: MIT License",
+          "Operating System :: OS Independent",
+          "Programming Language :: Python :: 3.6",
+          "Programming Language :: Python :: 3.7",
+          "Programming Language :: Python :: 3.8",
+          "Programming Language :: Python :: 3.9",
+          "Topic :: Software Development :: Libraries :: Application Frameworks",
+          "Topic :: Software Development :: Libraries :: Python Modules",
+      ])
