@@ -9,7 +9,7 @@ from sshtunnel import SSHTunnelForwarder
 
 class SQLAlchemySession:
 
-    def __init__(self, host, user=None, password=None, key=None, uri=None, port=22, to_host='127.0.0.1', to_port=27017, data_map=None):
+    def __init__(self, host, user=None, password=None, key=None, uri=None, port=22, to_host='127.0.0.1', to_port=27017, data_map=None, use_ssh=True):
 
         host = (host, port)
         user = user or getpass.getuser()
@@ -20,27 +20,29 @@ class SQLAlchemySession:
         self.connection = None
         self.data_map = data_map
         self.db_url = None
+        self.use_ssh = True
 
         if uri:
             to_host = self.uri.hostname or to_host
             to_port = self.uri.port or to_port
 
-        if password:
-            self.server = SSHTunnelForwarder(
-                host,
-                ssh_username=user,
-                ssh_password=password,
-                remote_bind_address=(to_host, to_port)
-            )
-        else:
-            self.server = SSHTunnelForwarder(
-                host,
-                ssh_username=user,
-                ssh_pkey=key,
-                remote_bind_address=(to_host, to_port)
-            )
+        if self.use_ssh:
+            if password:
+                self.server = SSHTunnelForwarder(
+                    host,
+                    ssh_username=user,
+                    ssh_password=password,
+                    remote_bind_address=(to_host, to_port)
+                )
+            else:
+                self.server = SSHTunnelForwarder(
+                    host,
+                    ssh_username=user,
+                    ssh_pkey=key,
+                    remote_bind_address=(to_host, to_port)
+                )
 
-        self.start()
+            self.start()
 
     def start(self):
         self.server.start()
@@ -68,14 +70,16 @@ class SQLAlchemySession:
         self.connection = self.engine.connect()
 
     def stop(self):
-        self.connection.close()
-        self.server.stop(force=True)
-        self.connection = None
-        del self.connection
-        self.server = None
+        if self.use_ssh:
+            self.connection.close()
+            self.server.stop(force=True)
+            self.connection = None
+            del self.connection
+            self.server = None
 
     def close(self):
-        self.stop()
+        if self.use_ssh:
+            self.stop()
 
     def execute(self, query):
         """
