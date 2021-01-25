@@ -9,7 +9,7 @@ from sshtunnel import SSHTunnelForwarder
 
 class SQLAlchemySession:
 
-    def __init__(self, host, user=None, password=None, key=None, uri=None, port=22, to_host='127.0.0.1', to_port=27017,
+    def __init__(self, host=None, user=None, password=None, key=None, uri=None, port=22, to_host='127.0.0.1', to_port=3306,
                  data_map=None):
         if data_map is None:
             data_map = {}
