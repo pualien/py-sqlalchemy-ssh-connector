@@ -33,11 +33,11 @@ session.stop()
 ```
 
 ### Example 2
-
+{adapter}://{username}:{password}@{host}:{port}/{database}
 ```python
 session = SQLAlchemySession(
     host='db.example.com',
-    uri='mongodb://user:password@127.0.0.1/?authSource=admin&authMechanism=SCRAM-SHA-256'
+    uri='mysql+pymysql://user:password@127.0.0.1:3306/db'
 )
 ...
 session.stop()
