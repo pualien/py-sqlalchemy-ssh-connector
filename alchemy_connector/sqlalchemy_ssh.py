@@ -9,8 +9,9 @@ from sshtunnel import SSHTunnelForwarder
 
 class SQLAlchemySession:
 
-    def __init__(self, host=None, user=None, password=None, key=None, uri=None, port=22, to_host='127.0.0.1', to_port=3306,
-                 data_map=None):
+    def __init__(self, host=None, user=None, password=None, key=None, uri=None, port=22, to_host='127.0.0.1',
+                 to_port=3306,
+                 data_map=None, local_bind_address_port=None):
         if data_map is None:
             data_map = {}
         self.data_map = data_map
@@ -22,6 +23,7 @@ class SQLAlchemySession:
         self.engine = None
         self.connection = None
         self.db_url = None
+        self.local_bind_address_port = local_bind_address_port
 
         if uri:
             to_host = self.uri.hostname or to_host
@@ -41,6 +43,9 @@ class SQLAlchemySession:
                 ssh_pkey=key,
                 remote_bind_address=(to_host, to_port)
             )
+
+        if self.local_bind_address_port is not None:
+            self.server.local_bind_address_port = self.local_bind_address_port
 
         self.start()
 
