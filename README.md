@@ -19,3 +19,53 @@ Binary installers for the latest released version are available at the
 ```sh
 pip install sqlalchemy-connector
 ```
+
+### Example 1
+
+
+```python
+from alchemy_connector import SQLAlchemySession
+
+session = SQLAlchemySession('db.example.com')
+result = session.execute('''select * from ecommerce_transactions limit 1''')
+session.stop()
+# session.start()
+```
+
+### Example 2
+
+```python
+session = SQLAlchemySession(
+    host='db.example.com',
+    uri='mongodb://user:password@127.0.0.1/?authSource=admin&authMechanism=SCRAM-SHA-256'
+)
+...
+session.stop()
+```
+
+### Example 3
+
+```python
+session = SQLAlchemySession(
+    host='db.example.com',
+    user='myuser',
+    password='mypassword',
+)
+...
+session.stop()
+```
+
+### Example 4
+
+```python
+session = SQLAlchemySession(
+    host='db.example.com',
+    port='21',
+    user='myuser',
+    key='/home/myplace/.ssh/id_rsa2',
+    to_port='37017',
+    to_host='0.0.0.0'
+)
+...
+session.stop()
+```
