@@ -62,17 +62,17 @@ class SQLAlchemySession:
 
         self.connection = self.engine.connect()
 
-    def stop(self):
+    def stop(self, force=True):
         if self.use_ssh:
             self.connection.close()
-            self.server.stop(force=True)
+            self.server.stop(force=force)
             self.connection = None
             del self.connection
             self.server = None
 
-    def close(self):
+    def close(self, force=True):
         if self.use_ssh:
-            self.stop()
+            self.stop(force=force)
 
     def execute(self, query):
         """
