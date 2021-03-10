@@ -23,7 +23,8 @@ server.start()
 
 
 adapter = 'mysql+pymysql'
-db_url = 'mysql+pymysql://myuser@localhost:{local_bind_port}'\
+db_url = 'mysql+pymysql://myuser@localhost:' \
+         '{local_bind_port}'\
     .format(local_bind_port=server.local_bind_port)
 
 
