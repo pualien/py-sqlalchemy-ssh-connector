@@ -4,7 +4,7 @@ const path = require('path');
 
 const createReadmeGif = async () => {
    // get the content of the README file
-   const readmeContent = await fs.promises.readFile('images/code_sample.py', 'utf8');
+   const readmeContent = await fs.promises.readFile('images/without_sql_alchemy_connector.py', 'utf8');
    // create a GIF from the readme file
    const gif = await generateGif(readmeContent, {
     preset: 'ultra',   // scroll slowly, up to 250 frames
@@ -13,7 +13,7 @@ const createReadmeGif = async () => {
     lineNumbers: false, // hide line numbers
   });
    // save the GIF in the docs/img folder
-   const gifPath = await gif.save('code-sample-content', path.resolve(__dirname), "lossless");
+   const gifPath = await gif.save('without-library-content', path.resolve(__dirname), "lossless");
    return gifPath;
 }
 
