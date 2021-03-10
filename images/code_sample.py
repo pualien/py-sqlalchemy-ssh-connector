@@ -19,9 +19,11 @@ session = SQLAlchemySession(
 
 
 
-df = session.pd_execute('''select * 
+df = session.pd_execute('''
+select * 
 from ecommerce_transactions 
-limit 1''')
+limit 1
+''')
 
 
 ...
