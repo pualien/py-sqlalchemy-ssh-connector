@@ -1,17 +1,43 @@
 import getpass
 import pandas as pd
 from urllib import parse
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, exc
 from sqlalchemy.pool import NullPool
 
 from sshtunnel import SSHTunnelForwarder
+
+
+class EmptyLogger:
+    @staticmethod
+    def info(msg):
+        pass
+
+    @staticmethod
+    def warn(msg):
+        pass
+
+    @staticmethod
+    def warning(msg):
+        pass
+
+    @staticmethod
+    def debug(msg):
+        pass
+
+    @staticmethod
+    def critical(msg):
+        pass
+
+    @staticmethod
+    def error(msg):
+        pass
 
 
 class SQLAlchemySession:
 
     def __init__(self, host=None, user=None, password=None, key=None, uri=None, port=22, to_host='127.0.0.1',
                  to_port=3306,
-                 data_map=None, local_bind_address_port=None, use_ssh=True):
+                 data_map=None, local_bind_address_port=None, use_ssh=True, logger=None):
         if data_map is None:
             data_map = {}
         self.data_map = data_map
@@ -51,6 +77,7 @@ class SQLAlchemySession:
                 self.server.local_bind_address_port = self.local_bind_address_port
 
             self.start()
+            self.logger = logger if logger is not None else EmptyLogger()
 
     def start(self):
         self.server.start()
@@ -84,11 +111,21 @@ class SQLAlchemySession:
         result = [{column: value for column, value in rowproxy.items()} for rowproxy in result_proxy]
         return result
 
-    def pd_execute(self, query):
+    def pd_execute(self, query, retry_once=True):
         """
         execute query
         :param query: SQL query
+        :param retry_once: if True retries query once
         :return: pandas DataFrame of query results
         """
-        df = pd.read_sql_query(query, self.connection)
+        if retry_once:
+            try:
+                df = pd.read_sql_query(query, self.connection)
+            except exc.OperationalError as ex:
+                self.logger.info('error: '+str(ex))
+                self.stop()
+                self.start()
+                df = pd.read_sql_query(query, self.connection)
+        else:
+            df = pd.read_sql_query(query, self.connection)
         return df
