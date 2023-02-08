@@ -4,4 +4,4 @@ PyMySQL==1.0.2
 PyYAML==5.4.1
 sshtunnel==0.4.0
 retry==0.9.2
-cryptography==36.0.2
+cryptography==39.0.1
