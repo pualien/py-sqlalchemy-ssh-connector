@@ -1,5 +1,5 @@
 pandas>=0.25.3
-sqlalchemy==2.0.8
+sqlalchemy==1.4.47
 PyMySQL==1.0.3
 PyYAML==5.4.1
 sshtunnel==0.4.0

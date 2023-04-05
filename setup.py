@@ -27,7 +27,7 @@ def reqs(*f):
 
 
 setup(name='sqlalchemy-connector',
-      version='0.1.38b1',
+      version='0.1.38',
       url='https://github.com/pualien/py-sqlalchemy-ssh-connector',
       license='MIT',
       author='Matteo Senardi',
