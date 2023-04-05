@@ -45,7 +45,8 @@ class SQLAlchemySession:
         user = data_map.get("ssh_username") or user or getpass.getuser()
         key = data_map.get("ssh_host_key") or key or '/home/{user}/.ssh/id_rsa'.format(user=user)
         self.to_host = to_host
-        self.uri = parse.urlparse(data_map.get("connection_uri")) if self.data_map.get("connection_uri") is not None else parse.urlparse(
+        self.uri = parse.urlparse(data_map.get("connection_uri")) if self.data_map.get("connection_uri") is not None \
+            else parse.urlparse(
             uri)
         self.engine = None
         self.connection = None

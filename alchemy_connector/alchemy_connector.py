@@ -76,8 +76,7 @@ class AlchemyConnector:
     @retry((pymysql.err.OperationalError), tries=5, delay=2)
     def connect(self):
         """
-        opens SQLAlchemy connection
-        :return: SQLAlchemy connection
+        opens SQLAlchemy connection        :return:
         """
         if self.connection is None and self.use_ssh:
             self.db_url = "{adapter}://{username}:{password}@localhost:{local_bind_port}/{database}".format(
