@@ -59,8 +59,9 @@ class AlchemyConnector:
                                                               ssh_username=self.data_map["ssh_username"],
                                                               ssh_pkey=mypkey,
                                                               remote_bind_address=(
-                                                              self.data_map["host"], self.data_map["port"]),
-                                                              local_bind_address=('127.0.0.1', self.local_bind_address_port)
+                                                                  self.data_map["host"], self.data_map["port"]),
+                                                              local_bind_address=(
+                                                              '127.0.0.1', self.local_bind_address_port)
                                                               )
         else:
             self.server = ConnectDisconnectSSHTunnelForwarder(self,
@@ -73,7 +74,7 @@ class AlchemyConnector:
         self.server.daemon_forward_servers = True
         return self.server
 
-    @retry((pymysql.err.OperationalError), tries=5, delay=2)
+    @retry(pymysql.err.OperationalError, tries=5, delay=2)
     def connect(self):
         """
         opens SQLAlchemy connection        :return:
